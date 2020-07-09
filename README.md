@@ -1,6 +1,6 @@
 ### Lua Rules : A forward chaining rete rules engine
 
-Lua Rules is like a mini version of [CLIPS](https://clipsrules.sourceforge.net/)
+Lua Rules is like a mini version of [CLIPS](http://clipsrules.sourceforge.net/)
 
 #### Facts
 Any table in Lua can be added to working memory as a fact with the `assert` function and can be removed with `retract`. Initial facts can be defined with the `deffacts` function.
