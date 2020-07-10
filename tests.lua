@@ -6,4 +6,8 @@ function testHookup()
     lu.assertEquals(1, 1)
 end
 
+function testLuaRulesModule()
+    lu.assertIsTable(require('luarules'))
+end
+
 os.exit(lu.LuaUnit.run())

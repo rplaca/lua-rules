@@ -12,4 +12,4 @@ A rule is created by the `defrule` function which takes two parameters, an *ante
 The rules engine itself is initialized with `reset` and started with the `run` function. Other top-level commands that are supported are `load` for loading rules and facts from a file, `clear` to delete all facts from working memory and `agenda` plus `watch` for debugging.
 
 #### NOTE!
-This is my first attempt at a non-trivial Lua program. I've implemented a number of rules engines and I'm comfortable around a number of other programming languages (including CLIPS) but if you see me running in the wrong direction, please point me towards the light.
+This is my first attempt at a non-trivial Lua program. I've implemented a number of rules engines and I'm comfortable around several other programming languages (including CLIPS) but if you see me running in the wrong direction, please point me towards the light.
