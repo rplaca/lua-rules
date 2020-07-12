@@ -13,8 +13,20 @@ M.assert = function (...)
 end
 
 M.retract = function (fact)
-    table.remove(M.fact_list, 1)
-    return true
+    index = -1
+    for i = 1, #M.fact_list do
+        if M.fact_list[i] == fact then
+            index = i
+            break
+        end
+    end
+
+    if index ~= -1 then
+        table.remove(M.fact_list, index)
+        return true
+    end
+
+    return false
 end
 
 M.clear = function ()
