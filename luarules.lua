@@ -12,21 +12,20 @@ M.assert = function (...)
     return true
 end
 
-M.retract = function (fact)
-    index = -1
-    for i = 1, #M.fact_list do
-        if M.fact_list[i] == fact then
-            index = i
-            break
+M.retract = function (...)
+    local args = {...}
+    local return_value = false
+    for _, fact in ipairs(args) do
+        for i = 1, #M.fact_list do
+            if M.fact_list[i] == fact then
+                table.remove(M.fact_list, i)
+                return_value = true
+                break
+            end
         end
     end
 
-    if index ~= -1 then
-        table.remove(M.fact_list, index)
-        return true
-    end
-
-    return false
+    return return_value
 end
 
 M.clear = function ()

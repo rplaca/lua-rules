@@ -51,6 +51,11 @@ function testLuaRulesFactListFacts()
     lu.assertTrue(lr.assert(f, b))
     lu.assertTrue(lr.retract(b))
     lu.assertEquals(lr.fact_list, {{'foo'},})
+
+    lu.assertTrue(lr.clear()) -- clear the working memory and
+    lu.assertTrue(lr.assert(f, b)) -- assert both facts again
+    lu.assertTrue(lr.retract(f, b)) -- retracting two facts should work as well
+    lu.assertEquals(#lr.fact_list, 0)
 end
 
 os.exit(lu.LuaUnit.run())
