@@ -17,4 +17,9 @@ M.retract = function (fact)
     return true
 end
 
+M.clear = function ()
+    M.fact_list = {}
+    return true
+end
+
 return M
