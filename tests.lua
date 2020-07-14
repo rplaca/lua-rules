@@ -32,7 +32,7 @@ function testLuaRulesFactListCount()
     lu.assertTrue(lr.assert(empty_fact, empty_fact, empty_fact)) -- asserting three facts should work
     lu.assertEquals(#lr.facts(), 3) -- and the fact-list should be three items long
     -- actually the above should only result in one fact (duplicates don't count), but
-    -- I'm not going to worry about that for now.
+    -- I'm not going to worry about that for now. XXX decide on duplicates
 
     lu.assertTrue(lr.retract(empty_fact))
     lu.assertEquals(#lr.facts(), 2) -- considering that we think of each of the
@@ -44,7 +44,7 @@ function testLuaRulesFactListFacts()
 
     lu.assertTrue(lr.clear())
     lu.assertEquals(#lr.facts(), 0) -- this is going to bite me once I implement
-    -- the initial-fact and make the fact_list variable private
+    -- the initial-fact XXX
 
     -- asserting two distinct facts and retracting one of them should leave one left
     local f, b = {'foo'}, {'bar'}
@@ -56,6 +56,28 @@ function testLuaRulesFactListFacts()
     lu.assertTrue(lr.assert(f, b)) -- assert both facts again
     lu.assertTrue(lr.retract(f, b)) -- retracting two facts should work as well
     lu.assertEquals(#lr.facts(), 0)
+end
+
+function testLuaRulesWatchFacts()
+    local lr = require('luarules')
+
+    lu.assertTrue(lr.clear())
+    lu.assertTrue(lr.watch('facts')) -- watching facts should return true
+    lu.assertFalse(lr.watch('fats')) -- watching fats should return false
+
+    -- XXX There is no assertPrints in LuaUnit so for now I will make a hack and
+    -- redirect the print command to make sure that it all works.
+    ---[[
+    local old_print, output = print, nil
+    print = function (...)
+        output = ...
+    end
+    lu.assertTrue(lr.assert({'foo'}))
+    -- and put things back
+    print = old_print
+    --]]
+    lu.assertEquals(output, '==> { "foo" }')
+
 end
 
 os.exit(lu.LuaUnit.run())

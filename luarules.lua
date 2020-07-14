@@ -1,8 +1,11 @@
 -- Lua Rules : A forward chaining rete rules engine
 
+local inspect = require('inspect')
+
 local M = {}
 
 local fact_list = {}
+local watch_list = { facts = false }
 
 --[[
 The assert function adds one or more facts to the fact-list.
@@ -11,6 +14,9 @@ M.assert = function (...)
     args = {...}
     for _, fact in ipairs(args) do
         table.insert(fact_list, fact)
+        if watch_list.facts == true then
+            print("==> " .. inspect(fact))
+        end
     end
     
     return true
@@ -51,6 +57,14 @@ The facts function returns the fact-list.
 --]]
 M.facts = function ()
     return fact_list
+end
+
+M.watch = function (watch_item)
+    if watch_list[watch_item] ~= nil then
+        watch_list[watch_item] = true
+        return true
+    end
+    return false
 end
 
 return M
