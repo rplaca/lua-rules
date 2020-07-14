@@ -34,6 +34,9 @@ M.retract = function (...)
             -- so that we don't have to iterate the fact_list for each one  
             if fact_list[i] == fact then
                 table.remove(fact_list, i)
+                if watch_list.facts == true then
+                    print("<== " .. inspect(fact))
+                end
                 return_value = true
                 break
             end
@@ -59,6 +62,10 @@ M.facts = function ()
     return fact_list
 end
 
+--[[
+The watch function prints to stdout when certain operations take place. If
+facts are watched, all fact assertions and retractions will be displayed.
+--]]
 M.watch = function (watch_item)
     if watch_list[watch_item] ~= nil then
         watch_list[watch_item] = true

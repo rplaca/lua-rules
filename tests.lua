@@ -73,10 +73,18 @@ function testLuaRulesWatchFacts()
         output = ...
     end
     lu.assertTrue(lr.assert({'foo'}))
+    lu.assertEquals(output, '==> { "foo" }')
+
+    f1 = {'bar', 'baz'}
+    lu.assertTrue(lr.assert(f1))
+    lu.assertEquals(output, '==> { "bar", "baz" }')
+
+    lu.assertTrue(lr.retract(f1))
+    lu.assertEquals(output, '<== { "bar", "baz" }')
+
     -- and put things back
     print = old_print
     --]]
-    lu.assertEquals(output, '==> { "foo" }')
 
 end
 
