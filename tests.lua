@@ -18,10 +18,13 @@ lu.assertPrints = function (fexp, expected)
     fexp_result = fexp()
     print = _print
 
-    lu.assertStrMatches(fexp_prints, expected)
+    if expected then lu.assertStrMatches(fexp_prints, expected) end
     return fexp_result
 end
 
+--[[
+    Sanity tests. If either of these fail, something is horribly wrong.
+--]]
 function testHookup()
     lu.assertEquals(1, 1)
 end
@@ -30,6 +33,9 @@ function testLuaRulesModule()
     lu.assertIsTable(require('luarules'))
 end
 
+--[[
+    Actual tests begin here.
+--]]
 function testLuaRulesClear()
     local lr = require('luarules')
 
@@ -90,6 +96,19 @@ function testLuaRulesWatchFacts()
     lu.assertTrue(lu.assertPrints(function () return lr.assert(f1) end, '==> { "bar", "baz" }'))
     lu.assertTrue(lu.assertPrints(function () return lr.retract(f1) end, '<== { "bar", "baz" }'))
 
+end
+
+function testLuaRulesDeffacts()
+    local lr = require('luarules')
+
+    lu.assertTrue(lr.clear())
+
+    lu.assertTrue(lr.deffacts('start', {'foo'}))
+    lu.assertTrue(lr.reset())
+    lu.assertTrue(lr.watch('facts')) -- watching facts should have reset trigger
+    -- both retract of all existing facts and assert for all deffacts
+    lu.assertTrue(lu.assertPrints(function () return lr.reset() end, '==> { "foo" }'))
+    -- XXX The above is not working. Seems as if the reset doesn't print!
 end
 
 os.exit(lu.LuaUnit.run())

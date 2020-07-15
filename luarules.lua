@@ -5,7 +5,18 @@ local inspect = require('inspect')
 local M = {}
 
 local fact_list = {}
+local initial_facts = {}
 local watch_list = { facts = false }
+
+--[[
+The deffacts function adds one or more facts as "initial facts" in a named
+set. When the reset function is called, every fact specified within a
+deffacts construct is added to the fact-list.
+--]]
+M.deffacts = function (name, ...)
+    initial_facts[name] = {...}
+    return true
+end
 
 --[[
 The assert function adds one or more facts to the fact-list.
@@ -54,6 +65,25 @@ M.clear = function ()
     
     return true
 end
+
+--[[
+The reset function deletes all facts from the fact-list and
+removes all activations from the agenda.
+--]]
+M.reset = function ()
+    -- retract all facts from the fact-list
+    fact_list = {} -- XXX this is not going to work, use retract
+    
+    -- and assert all initial facts (defined with deffacts)
+    for name, facts in pairs(initial_facts) do
+        for _, fact in ipairs(facts) do
+            M.assert(fact)
+        end
+    end
+
+    return true
+end
+
 
 --[[
 The facts function returns the fact-list.
