@@ -104,4 +104,12 @@ M.watch = function (watch_item)
     return false
 end
 
+M.unwatch = function (watch_item)
+    if watch_list[watch_item] ~= nil then
+        watch_list[watch_item] = false
+        return true
+    end
+    return false
+end
+
 return M

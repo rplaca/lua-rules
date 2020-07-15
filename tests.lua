@@ -38,6 +38,8 @@ end
 --]]
 function testLuaRulesClear()
     local lr = require('luarules')
+    lu.assertTrue(lr.unwatch('facts')) -- unwatch facts should return true
+    lu.assertFalse(lr.unwatch('fats')) -- unwatch fats should return false
 
     lu.assertTrue(lr.clear()) -- clearing the working memory should return true
     lu.assertEquals(#lr.facts(), 0) -- and the fact-list should be empty
@@ -45,8 +47,9 @@ end
 
 function testLuaRulesFactListCount()
     local lr = require('luarules')
-
+    lu.assertTrue(lr.unwatch('facts'))
     lu.assertTrue(lr.clear())
+
     lu.assertEquals(#lr.facts(), 0) -- ensure the fact-list is empty
     local empty_fact = {} -- the fact_list works by reference so we need a variable
     lu.assertTrue(lr.assert(empty_fact)) -- asserting an empty table should return True
@@ -67,8 +70,9 @@ end
 
 function testLuaRulesFactListFacts()
     local lr = require('luarules')
-
+    lu.assertTrue(lr.unwatch('facts'))
     lu.assertTrue(lr.clear())
+
     lu.assertEquals(#lr.facts(), 0) -- this is going to bite me once I implement
     -- the initial-fact XXX
 
@@ -86,8 +90,9 @@ end
 
 function testLuaRulesWatchFacts()
     local lr = require('luarules')
-
+    lu.assertTrue(lr.unwatch('facts'))
     lu.assertTrue(lr.clear())
+
     lu.assertTrue(lr.watch('facts')) -- watching facts should return true
     lu.assertFalse(lr.watch('fats')) -- watching fats should return false
 
@@ -100,7 +105,7 @@ end
 
 function testLuaRulesDeffacts()
     local lr = require('luarules')
-
+    lu.assertTrue(lr.unwatch('facts'))
     lu.assertTrue(lr.clear())
 
     lu.assertTrue(lr.deffacts('start', {'foo'}))
