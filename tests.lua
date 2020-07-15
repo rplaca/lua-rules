@@ -101,6 +101,9 @@ function testLuaRulesWatchFacts()
     lu.assertTrue(lu.assertPrints(function () return lr.assert(f1) end, '==> { "bar", "baz" }'))
     lu.assertTrue(lu.assertPrints(function () return lr.retract(f1) end, '<== { "bar", "baz" }'))
 
+    lu.assertTrue(lr.unwatch('facts'))
+    -- test that unwatch('facts') turns off printing
+    lu.assertTrue(lu.assertPrints(function () return lr.assert({'foo'}) end, nil))
 end
 
 function testLuaRulesDeffacts()
