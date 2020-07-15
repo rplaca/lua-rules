@@ -2,6 +2,26 @@
 
 local lu = require('luaunit')
 
+--[[ 
+    add a `lu.assertPrints(function () return <exp> end, <string>)` that return
+    whatever <exp> returns, hopefully simplifying a few tests in the progress.
+
+    NOTE! In order to capture the printed output of <exp> we're going to have
+    to 1) defer the execution of it so that we can 2) temporarily modify the
+    `print` function to capture whatever is printed.
+--]]
+
+lu.assertPrints = function (fexp, expected)
+    local _print = print
+    local fexp_result, fexp_prints
+    print = function (...) fexp_prints = ... end
+    fexp_result = fexp()
+    print = _print
+
+    lu.assertStrMatches(fexp_prints, expected)
+    return fexp_result
+end
+
 function testHookup()
     lu.assertEquals(1, 1)
 end
@@ -65,26 +85,10 @@ function testLuaRulesWatchFacts()
     lu.assertTrue(lr.watch('facts')) -- watching facts should return true
     lu.assertFalse(lr.watch('fats')) -- watching fats should return false
 
-    -- XXX There is no assertPrints in LuaUnit so for now I will make a hack and
-    -- redirect the print command to make sure that it all works.
-    ---[[
-    local old_print, output = print, nil
-    print = function (...)
-        output = ...
-    end
-    lu.assertTrue(lr.assert({'foo'}))
-    lu.assertEquals(output, '==> { "foo" }')
-
+    lu.assertTrue(lu.assertPrints(function () return lr.assert({'foo'}) end, '==> { "foo" }'))
     f1 = {'bar', 'baz'}
-    lu.assertTrue(lr.assert(f1))
-    lu.assertEquals(output, '==> { "bar", "baz" }')
-
-    lu.assertTrue(lr.retract(f1))
-    lu.assertEquals(output, '<== { "bar", "baz" }')
-
-    -- and put things back
-    print = old_print
-    --]]
+    lu.assertTrue(lu.assertPrints(function () return lr.assert(f1) end, '==> { "bar", "baz" }'))
+    lu.assertTrue(lu.assertPrints(function () return lr.retract(f1) end, '<== { "bar", "baz" }'))
 
 end
 
