@@ -72,8 +72,10 @@ removes all activations from the agenda.
 --]]
 M.reset = function ()
     -- retract all facts from the fact-list
-    fact_list = {} -- XXX this is not going to work, use retract
-    
+    for i = 1, #fact_list do
+        M.retract(fact_list[i])
+    end
+
     -- and assert all initial facts (defined with deffacts)
     for name, facts in pairs(initial_facts) do
         for _, fact in ipairs(facts) do
