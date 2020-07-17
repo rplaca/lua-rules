@@ -127,9 +127,10 @@ function testLuaRulesDefrule()
     lu.assertTrue(lr.unwatch('facts'))
     lu.assertTrue(lr.clear())
 
-    lu.assertTrue(lr.defrule({'foo'}, function () print('bar') end))
+    lu.assertTrue(lr.defrule('rule1', {'foo'}, function () print('bar') end))
     lu.assertTrue(lr.assert({'foo'}))
-    lu.assertTrue(lr.run())
+    -- this was wrong, issuing a run() would actually empty the agenda
+    -- lu.assertTrue(lr.run())
     lu.assertEquals(#lr.agenda(), 1)
 end
 

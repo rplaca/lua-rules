@@ -9,6 +9,18 @@ local agenda = {}
 local initial_facts = {}
 local watch_list = { facts = false }
 
+local rule_list = {}
+local working_memory = {}
+
+local root_node = {}
+root_node.add = function (fact)
+    for rule, pattern in pairs(working_memory) do
+        if inspect(fact) == inspect(pattern) then
+            table.insert(agenda, {rule, fact})
+        end
+    end
+end
+
 --[[
 The deffacts function adds one or more facts as "initial facts" in a named
 set. When the reset function is called, every fact specified within a
@@ -24,7 +36,9 @@ The defrule function is used to construct rules. The LHS is made up of
 conditional elements matched against the fact-list and the RHS should always
 be a function definition which will be called if the LHS matches.
 --]]
-M.defrule = function (name, ...)
+M.defrule = function (name, lhs, rhs)
+    working_memory[name] = lhs
+    rule_list[name] = rhs
     return true
 end
 
@@ -35,6 +49,7 @@ M.assert = function (...)
     args = {...}
     for _, fact in ipairs(args) do
         table.insert(fact_list, fact)
+        root_node.add(fact)
         if watch_list.facts == true then
             print("==> " .. inspect(fact))
         end
@@ -96,6 +111,9 @@ M.reset = function ()
     return true
 end
 
+--[[
+The run function starts the execution of the rules. 
+--]]
 M.run = function ()
     return true
 end
