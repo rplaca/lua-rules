@@ -122,4 +122,15 @@ function testLuaRulesDeffacts()
     lu.assertTrue(lu.assertPrints(function () return lr.reset() end, '<== { "foo" }\n==> { "foo" }'))
 end
 
+function testLuaRulesDefrule()
+    local lr = require('luarules')
+    lu.assertTrue(lr.unwatch('facts'))
+    lu.assertTrue(lr.clear())
+
+    lu.assertTrue(lr.defrule({'foo'}, function () print('bar') end))
+    lu.assertTrue(lr.assert({'foo'}))
+    lu.assertTrue(lr.run())
+    lu.assertEquals(#lr.agenda(), 1)
+end
+
 os.exit(lu.LuaUnit.run())

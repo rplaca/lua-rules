@@ -5,6 +5,7 @@ local inspect = require('inspect')
 local M = {}
 
 local fact_list = {}
+local agenda = {}
 local initial_facts = {}
 local watch_list = { facts = false }
 
@@ -15,6 +16,15 @@ deffacts construct is added to the fact-list.
 --]]
 M.deffacts = function (name, ...)
     initial_facts[name] = {...}
+    return true
+end
+
+--[[
+The defrule function is used to construct rules. The LHS is made up of
+conditional elements matched against the fact-list and the RHS should always
+be a function definition which will be called if the LHS matches.
+--]]
+M.defrule = function (name, ...)
     return true
 end
 
@@ -86,12 +96,22 @@ M.reset = function ()
     return true
 end
 
+M.run = function ()
+    return true
+end
 
 --[[
 The facts function returns the fact-list.
 --]]
 M.facts = function ()
     return fact_list
+end
+
+--[[
+The agenda function returns the agenda.
+--]]
+M.agenda = function ()
+    return agenda
 end
 
 --[[
