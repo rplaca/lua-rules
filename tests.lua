@@ -127,11 +127,12 @@ function testLuaRulesDefrule()
     lu.assertTrue(lr.unwatch('facts'))
     lu.assertTrue(lr.clear())
 
-    lu.assertTrue(lr.defrule('rule1', {'foo'}, function () print('bar') end))
+    lu.assertTrue(lr.defrule('rule1', {'foo'}, function (fact) print('bar') end))
     lu.assertTrue(lr.assert({'foo'}))
-    -- this was wrong, issuing a run() would actually empty the agenda
-    -- lu.assertTrue(lr.run())
+    -- test that the assert adds an activation on the agenda
     lu.assertEquals(#lr.agenda(), 1)
+    -- and that rule1 is fired, printing "bar"
+    lu.assertTrue(lu.assertPrints(function () return lr.run() end, "bar"))
 end
 
 os.exit(lu.LuaUnit.run())

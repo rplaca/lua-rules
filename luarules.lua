@@ -16,7 +16,8 @@ local root_node = {}
 root_node.add = function (fact)
     for rule, pattern in pairs(working_memory) do
         if inspect(fact) == inspect(pattern) then
-            table.insert(agenda, {rule, fact})
+            activation = { rule = rule, fact = fact, }
+            table.insert(agenda, activation)
         end
     end
 end
@@ -115,6 +116,10 @@ end
 The run function starts the execution of the rules. 
 --]]
 M.run = function ()
+    for i = 1, #agenda do
+        rule_list[agenda[i].rule](agenda[i].fact)
+    end
+
     return true
 end
 
